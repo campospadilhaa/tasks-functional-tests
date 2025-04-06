@@ -1,12 +1,15 @@
 package br.campospadilhaa.tasks.functional;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 // teste não está rodando porque não consegui obter o ChromeDriver da versão atual.
 // no curso era a versão 80
@@ -14,19 +17,28 @@ import org.openqa.selenium.chrome.ChromeDriver;
 public class TasksTest {
 
 	// definição do passo a passo do teste na navegação
-	public WebDriver acessarAplicacao() {
+	public WebDriver acessarAplicacao() throws MalformedURLException {
 
 		// link do código com o browser
-		WebDriver webDriver = new ChromeDriver();
 
-		webDriver.navigate().to("http://localhost:8001/tasks");
+		/* 1). comunicação utilizada para utilizar o Selenium em um único browser 
+		WebDriver webDriver = new ChromeDriver();/**/
+
+		/* 2). implementação para utilizar Selenium Grid */
+		DesiredCapabilities desiredCapabilities = DesiredCapabilities.chrome();
+		WebDriver webDriver = new RemoteWebDriver(new URL("http://192.168.29.238:4444/wd/hub"), desiredCapabilities);/**/
+
+		/* altera para o IP local da máquina para executar no Docker
+		webDriver.navigate().to("http://localhost:8001/tasks");/**/
+		webDriver.navigate().to("http://192.168.29.238:8001/tasks");
+
 		webDriver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 
 		return webDriver;
 	}
 
 	@Test
-	public void deveSalvarTarefaComSucesso() {
+	public void deveSalvarTarefaComSucesso() throws MalformedURLException {
 
 		WebDriver webDriver = acessarAplicacao();
 
@@ -52,7 +64,7 @@ public class TasksTest {
 	}
 
 	@Test
-	public void naoDeveSalvarTarefaSemDescriao() {
+	public void naoDeveSalvarTarefaSemDescriao() throws MalformedURLException {
 
 		WebDriver webDriver = acessarAplicacao();
 
@@ -78,7 +90,7 @@ public class TasksTest {
 	}
 
 	@Test
-	public void naoDeveSalvarTarefaSemData() {
+	public void naoDeveSalvarTarefaSemData() throws MalformedURLException {
 
 		WebDriver webDriver = acessarAplicacao();
 
@@ -104,7 +116,7 @@ public class TasksTest {
 	}
 
 	@Test
-	public void NaoDeveSalvarTarefaComDataPassada() {
+	public void NaoDeveSalvarTarefaComDataPassada() throws MalformedURLException {
 
 		WebDriver webDriver = acessarAplicacao();
 
