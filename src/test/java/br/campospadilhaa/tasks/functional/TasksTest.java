@@ -140,4 +140,27 @@ public class TasksTest {
 		// fechar o browser
 		//webDriver.quit()
 	}
+
+	@Test
+	public void DeveRemoverTarefaComSucesso() throws MalformedURLException {
+
+		WebDriver webDriver = acessarAplicacao();
+
+		// inserir tarefa para ser excluída
+		webDriver.findElement(By.id("addTodo")).click();
+		webDriver.findElement(By.id("task")).sendKeys("Nova tarefa - Functional Selenium");
+		webDriver.findElement(By.id("dueDate")).sendKeys("10/10/2030");
+
+		webDriver.findElement(By.id("saveButton")).click();
+		String message = webDriver.findElement(By.id("message")).getText();
+		Assert.assertEquals("Sucess!", message);
+
+		// remover a tarefa
+		webDriver.findElement(By.xpath("//a[@class='btn btn-outline-danger btn-sm']")).click();
+		message = webDriver.findElement(By.id("message")).getText();
+		Assert.assertEquals("Sucess!", message);
+
+		// fechar o browser
+		//webDriver.quit()
+	}
 }
